@@ -43,7 +43,7 @@ public class FontManager {
         return fonts.get(style);
     }
 
-    public void changeFonts(@NonNull Object view) throws IllegalAccessException {
+    public void changeFonts(@NonNull Object view) {
         if(fonts.size() == 0) {
             throw new RuntimeException("No fonts, make sure to add them with the method mapFont");
         }
@@ -53,9 +53,14 @@ public class FontManager {
         for (Field f : fields) {
                 if (f.getType() == Button.class || f.getType() == TextView.class || f.getType() == EditText.class) {
                         f.setAccessible(true);
-                        TextView fieldTextView = (TextView) f.get(view);
+                    TextView fieldTextView = null;
+                    try {
+                        fieldTextView = (TextView) f.get(view);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException("Field could not be accessed");
+                    }
 
-                        switch (fieldTextView.getTypeface().getStyle()) {
+                    switch (fieldTextView.getTypeface().getStyle()) {
                             case Typeface.NORMAL:
                                 if( fonts.get(Typeface.NORMAL) != null ) {
                                     fieldTextView.setTypeface(fonts.get(Typeface.NORMAL));
