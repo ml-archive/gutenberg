@@ -4,7 +4,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
     defaultConfig {
-        applicationId "dk.nodes.gutenberg"
+        //applicatiId "dk.nodes.gutenberg"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
