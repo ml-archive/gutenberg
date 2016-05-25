@@ -34,7 +34,7 @@ task installArchives(type: Upload) {
     description "Installs the artifacts to the local Maven repository."
     repositories.mavenInstaller {
         configuration = configurations.default
-        pom.groupId = 'dk.nodes.gutenberg'
+        pom.groupId = 'dk.nodes.gutenberg_local'
         pom.artifactId = 'v1'
         pom.version = '1'
     }
