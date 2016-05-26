@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+apply from: 'maven-push.gradle'
 
 android {
     compileSdkVersion 23
@@ -33,8 +33,8 @@ task installArchives(type: Upload) {
     description "Installs the artifacts to the local Maven repository."
     repositories.mavenInstaller {
         configuration = configurations.default
-        pom.groupId = 'dk.nodes.gutenberg_local'
-        pom.artifactId = 'v1'
-        pom.version = '1'
+        pom.groupId = 'dk.nodes.gutenberg'
+        pom.artifactId = 'gutenberg'
+        pom.version = '1-LOCAL'
     }
 }
