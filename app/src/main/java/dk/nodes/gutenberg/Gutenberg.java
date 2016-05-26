@@ -14,27 +14,27 @@ import java.lang.reflect.Field;
 /**
  * Created by joso on 27/11/15.
  */
-public class FontManager {
+public class Gutenberg {
 
     public static final int LIGHT = 4;
 
-    private static FontManager instance;
+    private static Gutenberg instance;
 
     private SparseArray<Typeface> fonts = new SparseArray<>();
 
-    private FontManager() {
+    private Gutenberg() {
 
     }
 
-    public static FontManager getInstance() {
+    public static Gutenberg getInstance() {
         if(instance == null) {
-            instance = new FontManager();
+            instance = new Gutenberg();
         }
 
         return instance;
     }
 
-    public FontManager mapFont(int style, @NonNull Typeface typeface) {
+    public Gutenberg mapFont(int style, @NonNull Typeface typeface) {
         fonts.put(style, typeface);
         return this;
     }
@@ -85,9 +85,9 @@ public class FontManager {
                                 }
                                 break;
 
-                            case FontManager.LIGHT:
-                                if( fonts.get(FontManager.LIGHT) != null ) {
-                                    fieldTextView.setTypeface(fonts.get(FontManager.LIGHT));
+                            case Gutenberg.LIGHT:
+                                if( fonts.get(Gutenberg.LIGHT) != null ) {
+                                    fieldTextView.setTypeface(fonts.get(Gutenberg.LIGHT));
                                 }
                                 break;
 
@@ -141,9 +141,9 @@ public class FontManager {
                         }
                         break;
 
-                    case FontManager.LIGHT:
-                        if( fonts.get(FontManager.LIGHT) != null ) {
-                            fieldTextView.setTypeface(fonts.get(FontManager.LIGHT));
+                    case Gutenberg.LIGHT:
+                        if( fonts.get(Gutenberg.LIGHT) != null ) {
+                            fieldTextView.setTypeface(fonts.get(Gutenberg.LIGHT));
                         }
                         break;
 

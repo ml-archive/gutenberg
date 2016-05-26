@@ -7,7 +7,7 @@ package dk.nodes.gutenberg;
 public class ReflectionAccessException extends RuntimeException {
     @Override
     public String getMessage() {
-        return ("Field could not be accesse");
+        return ("Field could not be accessed");
     }
 
 }
