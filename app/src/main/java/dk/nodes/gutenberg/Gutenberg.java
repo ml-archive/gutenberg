@@ -52,7 +52,7 @@ public class Gutenberg {
 
         for (Field f : fields) {
                 if (f.getType() == Button.class || f.getType() == TextView.class || f.getType() == EditText.class) {
-                        f.setAccessible(true);
+                    f.setAccessible(true);
                     TextView fieldTextView = null;
                     try {
                         fieldTextView = (TextView) f.get(view);
@@ -60,33 +60,41 @@ public class Gutenberg {
                         throw new RuntimeException("Field could not be accessed");
                     }
 
-                    switch (fieldTextView.getTypeface().getStyle()) {
+                    Typeface typeface = fieldTextView.getTypeface();
+
+                    if (typeface == null) {
+                        if (fonts.get(Typeface.NORMAL) != null) {
+                            fieldTextView.setTypeface(fonts.get(Typeface.NORMAL));
+                        }
+                    } else {
+
+                        switch (typeface.getStyle()) {
                             case Typeface.NORMAL:
-                                if( fonts.get(Typeface.NORMAL) != null ) {
+                                if (fonts.get(Typeface.NORMAL) != null) {
                                     fieldTextView.setTypeface(fonts.get(Typeface.NORMAL));
                                 }
                                 break;
 
                             case Typeface.BOLD:
-                                if( fonts.get(Typeface.BOLD) != null ) {
+                                if (fonts.get(Typeface.BOLD) != null) {
                                     fieldTextView.setTypeface(fonts.get(Typeface.BOLD));
                                 }
                                 break;
 
                             case Typeface.ITALIC:
-                                if( fonts.get(Typeface.ITALIC) != null ) {
+                                if (fonts.get(Typeface.ITALIC) != null) {
                                     fieldTextView.setTypeface(fonts.get(Typeface.ITALIC));
                                 }
                                 break;
 
                             case Typeface.BOLD_ITALIC:
-                                if( fonts.get(Typeface.BOLD_ITALIC) != null ) {
+                                if (fonts.get(Typeface.BOLD_ITALIC) != null) {
                                     fieldTextView.setTypeface(fonts.get(Typeface.BOLD_ITALIC));
                                 }
                                 break;
 
                             case Gutenberg.LIGHT:
-                                if( fonts.get(Gutenberg.LIGHT) != null ) {
+                                if (fonts.get(Gutenberg.LIGHT) != null) {
                                     fieldTextView.setTypeface(fonts.get(Gutenberg.LIGHT));
                                 }
                                 break;
@@ -96,6 +104,7 @@ public class Gutenberg {
                                 break;
 
                         }
+                    }
                 }
         }
     }
