@@ -34,7 +34,6 @@ public class Gutenberg {
         if (instance == null) {
             instance = new Gutenberg();
         }
-
         return instance;
     }
 
