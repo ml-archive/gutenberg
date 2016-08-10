@@ -1,6 +1,7 @@
 package dk.nodes.gutenberg;
 
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
@@ -54,7 +55,8 @@ public class Gutenberg {
         Field[] fields = view.getClass().getDeclaredFields();
 
         for (Field f : fields) {
-            if (f.getType() == Toolbar.class || f.getType() == android.widget.Toolbar.class ||
+            if (f.getType() == Toolbar.class ||
+                    (Build.VERSION.SDK_INT >= 21 && f.getType() == android.widget.Toolbar.class) ||
                     f.getType() == Button.class || f.getType() == AppCompatButton.class ||
                     f.getType() == TextView.class || f.getType() == AppCompatTextView.class ||
                     f.getType() == EditText.class || f.getType() == AppCompatEditText.class) {
