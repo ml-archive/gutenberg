@@ -1,5 +1,6 @@
 package dk.nodes.gutenberg;
 
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -70,6 +71,8 @@ public class Gutenberg {
 
                 Typeface typeface = fieldTextView.getTypeface();
 
+                fieldTextView.setPaintFlags(fieldTextView.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+
                 if (typeface == null) {
                     if (fonts.get(Typeface.NORMAL) != null) {
                         fieldTextView.setTypeface(fonts.get(Typeface.NORMAL));
@@ -131,6 +134,8 @@ public class Gutenberg {
                     fieldTextView.setTypeface(fonts.get(Typeface.NORMAL));
                     continue;
                 }
+
+                fieldTextView.setPaintFlags(fieldTextView.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
 
                 switch (fieldTextView.getTypeface().getStyle()) {
                     case Typeface.NORMAL:
