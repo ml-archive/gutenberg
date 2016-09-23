@@ -2,7 +2,7 @@
 
 Applies fonts to all TextViews within an Object, such as an Activity, Fragment or ViewGroup
 
-Usage:
+<h2>Usage</h2>
 
 in Application Class:
 
@@ -19,3 +19,11 @@ In Activity, Fragment or ViewGroup (or any class with views as fields/children)
 You may also specify a style to apply to a view:
 
       Gutenberg.getInstance().changeFonts(Gutenberg.LIGHT, inputField);
+      
+<h2>Download</h2>:
+
+Gradle: 
+
+        dependencies {
+            compile 'dk.nodes.gutenberg:gutenberg:2.0'
+        }
