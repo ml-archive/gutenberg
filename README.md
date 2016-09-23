@@ -14,8 +14,8 @@ in Application Class:
 
 In Activity, Fragment or ViewGroup (or any class with views as fields/children)
   
-      Gutenberg.getGutenberg().changeFonts(this); 
+      Gutenberg.getInstance().changeFonts(this); 
 
 You may also specify a style to apply to a view:
 
-      Gutenberg.getGutenberg().changeFonts(Gutenberg.LIGHT, inputField);
+      Gutenberg.getInstance().changeFonts(Gutenberg.LIGHT, inputField);
