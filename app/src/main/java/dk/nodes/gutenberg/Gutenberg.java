@@ -103,7 +103,7 @@ public class Gutenberg {
         if (typeface == -1 && fonts.containsValue(view.getTypeface())) {
             return; // font has already been applied
         }
-        switch (typeface == -1 ? view.getTypeface().getStyle() : typeface) {
+        switch (typeface == -1 ?  (view.getTypeface() == null ? Gutenberg.REGULAR : view.getTypeface().getStyle()) : typeface) {
             case Gutenberg.REGULAR:
                 if (fonts.get(Gutenberg.REGULAR) != null) {
                     view.setTypeface(fonts.get(Gutenberg.REGULAR));
