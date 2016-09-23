@@ -1,5 +1,6 @@
 package dk.nodes.gutenberg;
 
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.view.View;
@@ -136,5 +137,6 @@ public class Gutenberg {
             default:
                 break;
         }
+        view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
     }
 }
