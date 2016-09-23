@@ -6,7 +6,7 @@ Usage:
 
 in Application Class:
 
-    Gutenberg.getGutenberg()
+    Gutenberg.getInstance()
       .mapFont(Gutenberg.REGULAR, Typeface.createFromAsset(getAssets(), "font_regular.otf"))
       .mapFont(Gutenberg.MEDIUM, Typeface.createFromAsset(getAssets(), "font_medium.otf"))
       .mapFont(Gutenberg.LIGHT, Typeface.createFromAsset(getAssets(), "font_light.otf"))
