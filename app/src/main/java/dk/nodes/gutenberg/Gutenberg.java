@@ -27,7 +27,7 @@ public class Gutenberg {
 
     }
 
-    public static Gutenberg getGutenberg() {
+    public static Gutenberg getInstance() {
         if (gutenberg == null) {
             gutenberg = new Gutenberg();
         }
