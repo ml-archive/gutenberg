@@ -2,41 +2,36 @@ package dk.nodes.gutenberg;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.Toolbar;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 
-/**
- * Created by joso on 27/11/15.
- */
 public class Gutenberg {
 
-    public static final int LIGHT = 4;
+    public static final int REGULAR = Typeface.NORMAL;
+    public static final int BOLD = Typeface.BOLD;
+    public static final int ITALIC = Typeface.ITALIC;
+    public static final int BOLD_ITALIC = Typeface.BOLD_ITALIC;
+    public static final int MEDIUM = 4;
+    public static final int LIGHT = 5;
 
-    private static Gutenberg instance;
+    private static Gutenberg gutenberg;
 
-    private SparseArray<Typeface> fonts = new SparseArray<>();
+    private HashMap<Integer, Typeface> fonts = new HashMap<>();
 
     private Gutenberg() {
 
     }
 
     public static Gutenberg getInstance() {
-        if (instance == null) {
-            instance = new Gutenberg();
+        if (gutenberg == null) {
+            gutenberg = new Gutenberg();
         }
-        return instance;
+        return gutenberg;
     }
 
     public Gutenberg mapFont(int style, @NonNull Typeface typeface) {
@@ -44,141 +39,104 @@ public class Gutenberg {
         return this;
     }
 
-    public Typeface getFont(int style) {
-        return fonts.get(style);
+    /* Uses typeface already set to TextView in the XML. You can specify which style to use
+    *   by calling the method below and specifying the typeface to be applied to any contained views */
+
+    public void changeFonts(@NonNull Object object) {
+        changeFonts(-1, object);
     }
 
-    public void changeFonts(@NonNull Object view) {
-        if (fonts.size() == 0) {
-            throw new RuntimeException("No fonts, make sure to add them with the method mapFont");
-        }
+    /* Change the fonts of anything that may contain a view.
+       This method will detect any subclasses of TextView and any nested TextViews within
+       an activity or fragment. Views and ViewGroups are also handled by this method */
 
-        Field[] fields = view.getClass().getDeclaredFields();
-
-        for (Field f : fields) {
-            if (f.getType() == Toolbar.class ||
-                    (Build.VERSION.SDK_INT >= 21 && f.getType() == android.widget.Toolbar.class) ||
-                    f.getType() == Button.class || f.getType() == AppCompatButton.class ||
-                    f.getType() == TextView.class || f.getType() == AppCompatTextView.class ||
-                    f.getType() == EditText.class || f.getType() == AppCompatEditText.class) {
-                f.setAccessible(true);
-                TextView fieldTextView = null;
-                try {
-                    fieldTextView = (TextView) f.get(view);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException("Field could not be accessed");
-                }
-
-                Typeface typeface = fieldTextView.getTypeface();
-
-                fieldTextView.setPaintFlags(fieldTextView.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-
-                if (typeface == null) {
-                    if (fonts.get(Typeface.NORMAL) != null) {
-                        fieldTextView.setTypeface(fonts.get(Typeface.NORMAL));
-                    }
-                } else {
-
-                    switch (typeface.getStyle()) {
-                        case Typeface.NORMAL:
-                            if (fonts.get(Typeface.NORMAL) != null) {
-                                fieldTextView.setTypeface(fonts.get(Typeface.NORMAL));
-                            }
-                            break;
-                        case Typeface.BOLD:
-                            if (fonts.get(Typeface.BOLD) != null) {
-                                fieldTextView.setTypeface(fonts.get(Typeface.BOLD));
-                            }
-                            break;
-
-                        case Typeface.ITALIC:
-                            if (fonts.get(Typeface.ITALIC) != null) {
-                                fieldTextView.setTypeface(fonts.get(Typeface.ITALIC));
-                            }
-                            break;
-
-                        case Typeface.BOLD_ITALIC:
-                            if (fonts.get(Typeface.BOLD_ITALIC) != null) {
-                                fieldTextView.setTypeface(fonts.get(Typeface.BOLD_ITALIC));
-                            }
-                            break;
-
-                        case Gutenberg.LIGHT:
-                            if (fonts.get(Gutenberg.LIGHT) != null) {
-                                fieldTextView.setTypeface(fonts.get(Gutenberg.LIGHT));
-                            }
-                            break;
-
-                        default:
-
-                            break;
-
+    public void changeFonts(@NonNull final int typeface, @NonNull final Object object) {
+        if (object instanceof View) {
+            changeViewFonts(typeface, (View) object);
+        } else {
+            Field[] fields = object.getClass().getDeclaredFields();
+            View fieldTextView;
+            for (Field f : fields) {
+                if (View.class.isAssignableFrom(f.getType())) {
+                    f.setAccessible(true);
+                    try {
+                        fieldTextView = (View) f.get(object);
+                        changeViewFonts(typeface, fieldTextView);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException("Field could not be accessed");
                     }
                 }
             }
         }
     }
 
-    public void changeFonts(@NonNull View view) {
+    /* Change fonts for View and any subviews they contain. This will reach every nested child TextView */
+
+    private void changeViewFonts(final int typeface, @NonNull View view) {
         if (fonts.size() == 0) {
             throw new RuntimeException("No fonts, make sure to add them with the method mapFont");
         }
-
-        for (int i = 0; i < ((ViewGroup) view).getChildCount(); ++i) {
-            View nextChild = ((ViewGroup) view).getChildAt(i);
-
-            if (nextChild instanceof Button || nextChild instanceof EditText || nextChild instanceof TextView) {
-                TextView fieldTextView = (TextView) nextChild;
-
-                if (fieldTextView.getTypeface() == null) {
-                    fieldTextView.setTypeface(fonts.get(Typeface.NORMAL));
-                    continue;
-                }
-
-                fieldTextView.setPaintFlags(fieldTextView.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-
-                switch (fieldTextView.getTypeface().getStyle()) {
-                    case Typeface.NORMAL:
-                        if (fonts.get(Typeface.NORMAL) != null) {
-                            fieldTextView.setTypeface(fonts.get(Typeface.NORMAL));
-                        }
-                        break;
-
-                    case Typeface.BOLD:
-                        if (fonts.get(Typeface.BOLD) != null) {
-                            fieldTextView.setTypeface(fonts.get(Typeface.BOLD));
-                        }
-                        break;
-
-                    case Typeface.ITALIC:
-                        if (fonts.get(Typeface.ITALIC) != null) {
-                            fieldTextView.setTypeface(fonts.get(Typeface.ITALIC));
-                        }
-                        break;
-
-                    case Typeface.BOLD_ITALIC:
-                        if (fonts.get(Typeface.BOLD_ITALIC) != null) {
-                            fieldTextView.setTypeface(fonts.get(Typeface.BOLD_ITALIC));
-                        }
-                        break;
-
-                    case Gutenberg.LIGHT:
-                        if (fonts.get(Gutenberg.LIGHT) != null) {
-                            fieldTextView.setTypeface(fonts.get(Gutenberg.LIGHT));
-                        }
-                        break;
-
-                    default:
-                        break;
-
-                }
-            }
-
-            if (nextChild instanceof ViewGroup) {
-                if (((ViewGroup) nextChild).getChildCount() > 0) {
-                    changeFonts(nextChild);
+        if (view instanceof TextView) {
+            transform(typeface, (TextView) view);
+        }
+        if (view instanceof ViewGroup && ((ViewGroup) view).getChildCount() > 0) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); ++i) {
+                View nextChild = ((ViewGroup) view).getChildAt(i);
+                if (nextChild instanceof TextView) {
+                    transform(typeface, (TextView) nextChild);
+                } else if (nextChild instanceof ViewGroup) {
+                    if (((ViewGroup) nextChild).getChildCount() > 0) {
+                        changeFonts(nextChild);
+                    }
                 }
             }
         }
+    }
+
+    /* Change fonts of only one TextView programmatically */
+
+    private void transform(final TextView view) {
+        transform(-1, view);
+    }
+
+    private void transform(final int typeface, final TextView view) {
+        if (typeface == -1 && fonts.containsValue(view.getTypeface())) {
+            return; // font has already been applied
+        }
+        switch (typeface == -1 ?  (view.getTypeface() == null ? Gutenberg.REGULAR : view.getTypeface().getStyle()) : typeface) {
+            case Gutenberg.REGULAR:
+                if (fonts.get(Gutenberg.REGULAR) != null) {
+                    view.setTypeface(fonts.get(Gutenberg.REGULAR));
+                }
+                break;
+            case Gutenberg.MEDIUM:
+                if (fonts.get(Gutenberg.MEDIUM) != null) {
+                    view.setTypeface(fonts.get(Gutenberg.MEDIUM));
+                }
+                break;
+            case Gutenberg.BOLD:
+                if (fonts.get(Gutenberg.BOLD) != null) {
+                    view.setTypeface(fonts.get(Gutenberg.BOLD));
+                }
+                break;
+            case Gutenberg.ITALIC:
+                if (fonts.get(Gutenberg.ITALIC) != null) {
+                    view.setTypeface(fonts.get(Gutenberg.ITALIC));
+                }
+                break;
+            case Gutenberg.BOLD_ITALIC:
+                if (fonts.get(Gutenberg.BOLD_ITALIC) != null) {
+                    view.setTypeface(fonts.get(Gutenberg.BOLD_ITALIC));
+                }
+                break;
+            case Gutenberg.LIGHT:
+                if (fonts.get(Gutenberg.LIGHT) != null) {
+                    view.setTypeface(fonts.get(Gutenberg.LIGHT));
+                }
+                break;
+            default:
+                break;
+        }
+        view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
     }
 }
