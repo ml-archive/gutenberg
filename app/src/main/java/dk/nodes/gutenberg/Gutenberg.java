@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by joso on 27/11/15.
@@ -46,6 +48,16 @@ public class Gutenberg {
 
     public Typeface getFont(int style) {
         return fonts.get(style);
+    }
+
+    private List<Field> getAllFields(List<Field> fields, Class<?> type) {
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+        if (type.getSuperclass() != null) {
+            fields = getAllFields(fields, type.getSuperclass());
+        }
+
+        return fields;
     }
 
     public void changeFonts(@NonNull Object view) {
