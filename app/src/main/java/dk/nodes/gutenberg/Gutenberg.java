@@ -10,6 +10,9 @@ import android.widget.TextView;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+/**
+ * Created by Nodes Agency, 2016
+ */
 public class Gutenberg {
 
     public static final int REGULAR = Typeface.NORMAL;
@@ -37,6 +40,10 @@ public class Gutenberg {
     public Gutenberg mapFont(int style, @NonNull Typeface typeface) {
         fonts.put(style, typeface);
         return this;
+    }
+
+    public Typeface getFont(final int style ) {
+        return fonts.get(style);
     }
 
     /* Uses typeface already set to TextView in the XML. You can specify which style to use
@@ -135,6 +142,9 @@ public class Gutenberg {
                 }
                 break;
             default:
+                if (fonts.get(typeface) != null) {
+                    view.setTypeface(fonts.get(typeface));
+                }
                 break;
         }
         view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
